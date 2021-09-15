@@ -18,6 +18,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 
 public class FXMLDocumentController implements Initializable {
 
@@ -26,7 +28,16 @@ public class FXMLDocumentController implements Initializable {
 
     @FXML
     private Button btnConectar;
-
+    
+    @FXML 
+    private TableView tabela = new TableView();
+    
+    @FXML
+    private TableColumn colStatus= new TableColumn();
+    
+    @FXML
+    private TableColumn colData= new TableColumn();
+    
     private SerialPort porta;
 
     @Override
