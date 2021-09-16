@@ -8,7 +8,7 @@
   </information>
   <resources>
     <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
-    <jar href="Cancela_estacionamento.jar" size="6085" download="eager" />
+    <jar href="Cancela_estacionamento.jar" size="8704" download="eager" />
     <jar href="lib\jSerialComm-2.7.0.jar" size="489794" download="eager" />
     <jar href="lib\postgresql-9.4.1209.jar" size="678049" download="eager" />
   </resources>

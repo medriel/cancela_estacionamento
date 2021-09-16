@@ -1,5 +1,6 @@
 package cancela_estacionamento;
 
+import cancela_estacionamento.Model.Registro;
 import com.fazecast.jSerialComm.SerialPort;
 import java.io.InputStream;
 import java.net.URL;
@@ -12,14 +13,20 @@ import java.sql.Connection;
 import java.util.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 
 public class FXMLDocumentController implements Initializable {
 
@@ -28,16 +35,11 @@ public class FXMLDocumentController implements Initializable {
 
     @FXML
     private Button btnConectar;
-    
-    @FXML 
-    private TableView tabela = new TableView();
-    
-    @FXML
-    private TableColumn colStatus= new TableColumn();
-    
-    @FXML
-    private TableColumn colData= new TableColumn();
-    
+
+    @FXML private TableView<Registro> tabela = new TableView();
+    @FXML private TableColumn<Registro, String> colStatus = new TableColumn<>();
+    @FXML private TableColumn<Registro, String> colData = new TableColumn<>();
+
     private SerialPort porta;
 
     @Override
@@ -45,7 +47,10 @@ public class FXMLDocumentController implements Initializable {
         carregarPortas();
         try {
             getConexao();
+            initTable();
         } catch (SQLException ex) {
+            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
             Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
         }
         try {
@@ -61,6 +66,11 @@ public class FXMLDocumentController implements Initializable {
         for (SerialPort portName : portNames) {
             cbPortas.getItems().add(portName.getSystemPortName());
         }
+    }
+
+    @FXML
+    public void btnDesconectarAction() {
+
     }
 
     @FXML
@@ -92,11 +102,11 @@ public class FXMLDocumentController implements Initializable {
 //                                System.out.println("Dentro do if = "+response);
 //                                System.out.println(response.equalsIgnoreCase("aberto"));
 //                                System.out.println(response.startsWith("A"));
-                                if(response.startsWith("A")){
+                                if (response.startsWith("A")) {
                                     System.out.println("ENTROUUUUUUUUUUUU");
-                                   gravar(response); 
+                                    gravar(response);
                                 }
-                                
+
                             }
                             aux = response;
                             //atualizar tabela
@@ -158,5 +168,47 @@ public class FXMLDocumentController implements Initializable {
         ps.setString(1, response);
         ps.setString(2, getDateTime());
         ps.executeUpdate();
+    }
+
+    public List<Registro> consultarDados() throws Exception {
+        String sql = "SELECT * FROM registro order by data_hora";
+        PreparedStatement ps = getPreparedStatement(false, sql);
+
+        ResultSet rs = ps.executeQuery();
+
+        List<Registro> registros = new ArrayList<Registro>();
+        while (rs.next()) {
+            Registro registro = new Registro();
+            registro.setStatus(rs.getString("status"));
+            registro.setDataHora(rs.getString("data_hora"));
+            System.out.println(rs.getString("data_hora"));
+//            System.out.println(registro.getDataHora());
+            registros.add(registro);
+        }
+
+        return registros;
+    }
+
+    public void initTable() throws Exception {
+        colStatus.setCellValueFactory(new PropertyValueFactory<Registro, String>("status"));
+        colData.setCellValueFactory(new PropertyValueFactory<Registro, String>("data_hora")); // esse data_hora q n [e achado
+
+        tabela.setItems(atualizarTabela());
+    }
+
+    private ObservableList<Registro> atualizarTabela() throws Exception {
+        return FXCollections.observableArrayList(consultarDados());
+    }
+
+    private void preencherLista() {
+        List<Registro> registros;
+        try {
+            registros = consultarDados();
+            ObservableList<Registro> data = FXCollections.observableArrayList(registros);
+            tabela.setItems(data);
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
     }
 }
