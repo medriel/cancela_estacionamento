@@ -20,6 +20,15 @@ public class Registro {
     public void setDataHora(String data_hora) {
         this.data_hora = data_hora;
     }
+    
+     @Override
+    public String toString() {
+        return (
+                "\n \t Controle de Acesso da cancela \n"+
+                "Status da cancela: "+status 
+                + "Data e hora da abertura da cancela: " + data_hora
+                );
+    }
 }
 
 //        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");

@@ -27,6 +27,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.ListView;
 
 public class FXMLDocumentController implements Initializable {
 
@@ -39,11 +40,15 @@ public class FXMLDocumentController implements Initializable {
     @FXML private TableView<Registro> tabela = new TableView();
     @FXML private TableColumn<Registro, String> colStatus = new TableColumn<>();
     @FXML private TableColumn<Registro, String> colData = new TableColumn<>();
+    
+    @FXML
+    private ListView<Registro> lstRegistros;
 
     private SerialPort porta;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        preencherLista();
         carregarPortas();
         try {
             getConexao();
@@ -205,7 +210,7 @@ public class FXMLDocumentController implements Initializable {
         try {
             registros = consultarDados();
             ObservableList<Registro> data = FXCollections.observableArrayList(registros);
-            tabela.setItems(data);
+            lstRegistros.setItems(data);
         } catch (Exception e) {
 
             e.printStackTrace();
