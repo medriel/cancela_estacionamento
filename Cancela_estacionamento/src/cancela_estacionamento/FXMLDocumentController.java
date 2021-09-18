@@ -24,9 +24,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.ListView;
 
 public class FXMLDocumentController implements Initializable {
@@ -37,14 +34,12 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private Button btnConectar;
 
-    @FXML private TableView<Registro> tabela = new TableView();
-    @FXML private TableColumn<Registro, String> colStatus = new TableColumn<>();
-    @FXML private TableColumn<Registro, String> colData = new TableColumn<>();
-    
     @FXML
     private ListView<Registro> lstRegistros;
 
     private SerialPort porta;
+
+    Thread thread;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -52,14 +47,6 @@ public class FXMLDocumentController implements Initializable {
         carregarPortas();
         try {
             getConexao();
-            initTable();
-        } catch (SQLException ex) {
-            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (Exception ex) {
-            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        try {
-            System.out.println(getConexao());
         } catch (SQLException ex) {
             Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -74,18 +61,16 @@ public class FXMLDocumentController implements Initializable {
     }
 
     @FXML
-    public void btnDesconectarAction() {
-
-    }
-
-    @FXML
     private void btnConectarAction() throws SQLException {
+        
+        preencherLista();
+        
         porta = SerialPort.getCommPort(cbPortas.getSelectionModel().getSelectedItem().toString());
         porta.setComPortTimeouts(SerialPort.TIMEOUT_READ_SEMI_BLOCKING, 10000, 10000);
         porta.setBaudRate(2000000);
         InputStream in = porta.getInputStream();
 
-        Thread thread = new Thread() {
+        thread = new Thread() {
             String aux = "";
 
             public void run() {
@@ -101,24 +86,14 @@ public class FXMLDocumentController implements Initializable {
                             int bytesRead = porta.readBytes(buffer, Math.min(buffer.length, porta.bytesAvailable()));
                             String response = new String(buffer, 0, bytesRead);
                             System.out.println(response);
-                            //condicao de controle para entrar na funcao de slavar no banco
-                            // salvar no banco
                             if (!response.equals(aux)) {
-//                                System.out.println("Dentro do if = "+response);
-//                                System.out.println(response.equalsIgnoreCase("aberto"));
-//                                System.out.println(response.startsWith("A"));
                                 if (response.startsWith("A")) {
-                                    System.out.println("ENTROUUUUUUUUUUUU");
                                     gravar(response);
                                 }
-
                             }
                             aux = response;
-                            //atualizar tabela
                         }
-
                         Thread.sleep(1000);
-
                         in.close();
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -127,19 +102,20 @@ public class FXMLDocumentController implements Initializable {
             }
         };
 
-        if (btnConectar.getText().equals("Conectar")) {
-            System.out.println("Conectar");
-            porta.openPort();
-            btnConectar.setText("Desconectar");
-            cbPortas.setDisable(true);
-            thread.start();
+        porta.openPort();
+        cbPortas.setDisable(true);
+        thread.start();
 
-        } else {
-            thread.interrupt();
-            porta.closePort();
-            cbPortas.setDisable(false);
-            btnConectar.setText("Conectar");
-        }
+    }
+
+    @FXML
+    public void btnDesconectarAction() {
+        
+        preencherLista();
+        
+        thread.interrupt();
+        porta.closePort();
+        cbPortas.setDisable(false);
     }
 
     protected Connection getConexao() throws SQLException {
@@ -166,7 +142,6 @@ public class FXMLDocumentController implements Initializable {
     }
 
     public void gravar(String response) throws Exception {
-
         String sql = "insert into registro (status, data_hora) values (?,?)";
         PreparedStatement ps = getPreparedStatement(false, sql);
 
@@ -176,7 +151,7 @@ public class FXMLDocumentController implements Initializable {
     }
 
     public List<Registro> consultarDados() throws Exception {
-        String sql = "SELECT * FROM registro order by data_hora";
+        String sql = "SELECT * FROM registro order by data_hora desc";
         PreparedStatement ps = getPreparedStatement(false, sql);
 
         ResultSet rs = ps.executeQuery();
@@ -186,23 +161,10 @@ public class FXMLDocumentController implements Initializable {
             Registro registro = new Registro();
             registro.setStatus(rs.getString("status"));
             registro.setDataHora(rs.getString("data_hora"));
-            System.out.println(rs.getString("data_hora"));
-//            System.out.println(registro.getDataHora());
             registros.add(registro);
         }
 
         return registros;
-    }
-
-    public void initTable() throws Exception {
-        colStatus.setCellValueFactory(new PropertyValueFactory<Registro, String>("status"));
-        colData.setCellValueFactory(new PropertyValueFactory<Registro, String>("data_hora")); // esse data_hora q n [e achado
-
-        tabela.setItems(atualizarTabela());
-    }
-
-    private ObservableList<Registro> atualizarTabela() throws Exception {
-        return FXCollections.observableArrayList(consultarDados());
     }
 
     private void preencherLista() {
