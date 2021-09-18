@@ -24,13 +24,11 @@ public class Registro {
      @Override
     public String toString() {
         return (
-                "\n \t Controle de Acesso da cancela \n"+
-                "Status da cancela: "+status 
-                + "Data e hora da abertura da cancela: " + data_hora
+                "--------------------------------------------------------------------------------------\n"+
+                "\t \t \t \t Controle de Acesso da cancela \n"+
+                "Status da cancela: "+status + "\n"
+                + "Data e hora da abertura da cancela: " + data_hora + "\n"+
+                "--------------------------------------------------------------------------------------\n\n"
                 );
     }
 }
-
-//        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-//        Date date = new Date();
-//        this.data_hora = dateFormat.format(date);

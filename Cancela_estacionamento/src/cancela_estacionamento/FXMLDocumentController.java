@@ -33,6 +33,9 @@ public class FXMLDocumentController implements Initializable {
 
     @FXML
     private Button btnConectar;
+    
+    @FXML
+    private Button btnDesconectar;
 
     @FXML
     private ListView<Registro> lstRegistros;
@@ -105,7 +108,8 @@ public class FXMLDocumentController implements Initializable {
         porta.openPort();
         cbPortas.setDisable(true);
         thread.start();
-
+        btnConectar.setDisable(true);
+        btnDesconectar.setDisable(false);
     }
 
     @FXML
@@ -116,6 +120,9 @@ public class FXMLDocumentController implements Initializable {
         thread.interrupt();
         porta.closePort();
         cbPortas.setDisable(false);
+        
+        btnConectar.setDisable(false);
+        btnDesconectar.setDisable(true);
     }
 
     protected Connection getConexao() throws SQLException {

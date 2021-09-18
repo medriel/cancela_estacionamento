@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.image.*?>
 <?import javafx.scene.paint.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.text.*?>
@@ -9,53 +10,58 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="633.0" prefWidth="457.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cancela_estacionamento.FXMLDocumentController">
-   <children>
-      <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="36.0" prefWidth="458.0" text="Controle de entrada do estacionamento" textAlignment="CENTER" textFill="#20a6e4" textOverrun="CENTER_ELLIPSIS">
-         <font>
-            <Font size="23.0" />
-         </font>
-         <VBox.margin>
-            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-         </VBox.margin>
-      </Label>
-      <Label alignment="CENTER" prefHeight="30.0" prefWidth="462.0" text="Escolha a porta que o Arduino está conectado:" textAlignment="CENTER">
-         <font>
-            <Font size="17.0" />
-         </font>
-         <opaqueInsets>
-            <Insets />
-         </opaqueInsets>
-         <VBox.margin>
-            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-         </VBox.margin>
-      </Label>
-      <ComboBox fx:id="cbPortas" prefHeight="46.0" prefWidth="216.0">
-         <VBox.margin>
-            <Insets bottom="10.0" left="110.0" right="50.0" top="10.0" />
-         </VBox.margin>
-      </ComboBox>
-      <Button fx:id="btnConectar" mnemonicParsing="false" onAction="#btnConectarAction" prefHeight="72.0" prefWidth="188.0" text="Conectar">
-         <VBox.margin>
-            <Insets bottom="10.0" left="120.0" top="20.0" />
-         </VBox.margin>
-      </Button>
-      <Label prefHeight="20.0" prefWidth="217.0" text="Histórico da situação da cancela:">
-         <font>
-            <Font size="14.0" />
-         </font>
-         <VBox.margin>
-            <Insets left="10.0" right="10.0" top="10.0" />
-         </VBox.margin>
-      </Label>
-      <ListView fx:id="lstRegistros" prefHeight="319.0" prefWidth="457.0">
-         <VBox.margin>
-            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-         </VBox.margin></ListView>
-      <Button mnemonicParsing="false" onAction="#btnDesconectarAction" prefHeight="37.0" prefWidth="130.0" text="Desconectar">
-         <VBox.margin>
-            <Insets bottom="10.0" left="320.0" right="10.0" top="10.0" />
-         </VBox.margin>
-      </Button>
-   </children>
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="631.0" prefWidth="457.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cancela_estacionamento.FXMLDocumentController">
+    <children>
+        <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="36.0" prefWidth="458.0" text="Controle de entrada do estacionamento" textAlignment="CENTER" textFill="#20a6e4" textOverrun="CENTER_ELLIPSIS">
+            <font>
+                <Font size="23.0" />
+            </font>
+            <VBox.margin>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+            </VBox.margin>
+        </Label>
+        <Label alignment="CENTER" prefHeight="30.0" prefWidth="462.0" text="Escolha a porta que o Arduino está conectado:" textAlignment="CENTER">
+            <font>
+                <Font size="17.0" />
+            </font>
+            <opaqueInsets>
+                <Insets />
+            </opaqueInsets>
+            <VBox.margin>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+            </VBox.margin>
+        </Label>
+        <ComboBox fx:id="cbPortas" prefHeight="30.0" prefWidth="216.0">
+            <VBox.margin>
+                <Insets bottom="10.0" left="110.0" right="50.0" top="10.0" />
+            </VBox.margin>
+        </ComboBox>
+        <HBox prefHeight="100.0" prefWidth="200.0">
+            <children>
+                <Button fx:id="btnDesconectar" mnemonicParsing="false" onAction="#btnDesconectarAction" prefHeight="72.0" prefWidth="188.0" text="Desconectar">
+                    <HBox.margin>
+                        <Insets left="10.0" right="50.0" top="10.0" />
+                    </HBox.margin>
+                </Button>
+                <Button fx:id="btnConectar" mnemonicParsing="false" onAction="#btnConectarAction" prefHeight="72.0" prefWidth="188.0" text="Conectar">
+                    <HBox.margin>
+                        <Insets left="10.0" right="10.0" top="10.0" />
+                    </HBox.margin>
+                </Button>
+            </children>
+        </HBox>
+        <Label prefHeight="20.0" prefWidth="217.0" text="Histórico da situação da cancela:">
+            <font>
+                <Font size="14.0" />
+            </font>
+            <VBox.margin>
+                <Insets left="10.0" right="10.0" top="10.0" />
+            </VBox.margin>
+        </Label>
+        <ListView fx:id="lstRegistros" prefHeight="319.0" prefWidth="457.0">
+            <VBox.margin>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+            </VBox.margin>
+        </ListView>
+    </children>
 </VBox>
