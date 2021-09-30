@@ -24,6 +24,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 
 public class FXMLDocumentController implements Initializable {
@@ -39,13 +40,17 @@ public class FXMLDocumentController implements Initializable {
 
     @FXML
     private ListView<Registro> lstRegistros;
-
+    
+    @FXML 
+    private Label lblStatus;
+            
     private SerialPort porta;
 
     Thread thread;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        lblStatus.setText("Desconectado");
         preencherLista();
         carregarPortas();
         try {
@@ -65,6 +70,7 @@ public class FXMLDocumentController implements Initializable {
 
     @FXML
     private void btnConectarAction() throws SQLException {
+        lblStatus.setText("Conectado");
         
         preencherLista();
         
@@ -75,6 +81,7 @@ public class FXMLDocumentController implements Initializable {
 
         thread = new Thread() {
             String aux = "";
+             String response;
 
             public void run() {
                 int availableBytes = 0;
@@ -87,15 +94,15 @@ public class FXMLDocumentController implements Initializable {
                         if (availableBytes > 0) {
                             byte[] buffer = new byte[1024];
                             int bytesRead = porta.readBytes(buffer, Math.min(buffer.length, porta.bytesAvailable()));
-                            String response = new String(buffer, 0, bytesRead);
-                            System.out.println(response);
+                            response = new String(buffer, 0, bytesRead);
+                        }
+                        System.out.println(response);
                             if (!response.equals(aux)) {
                                 if (response.startsWith("A")) {
                                     gravar(response);
                                 }
                             }
                             aux = response;
-                        }
                         Thread.sleep(1000);
                         in.close();
                     } catch (Exception e) {
@@ -114,7 +121,7 @@ public class FXMLDocumentController implements Initializable {
 
     @FXML
     public void btnDesconectarAction() {
-        
+        lblStatus.setText("Desconectado");
         preencherLista();
         
         thread.interrupt();

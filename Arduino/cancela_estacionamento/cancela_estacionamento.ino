@@ -1,8 +1,8 @@
 #include <Servo.h>
 
 Servo servo_9;
-const int pino_sensor(13);
-const int pino(12);
+const int pino_sensor(4); //13
+const int pino(2); //12
 int valor_sensor;
 
 void setup(){
@@ -20,16 +20,14 @@ void tratar_fechar_cancela(){
   for(cont_tempo;cont_tempo<50;cont_tempo++){
     valor_sensor = digitalRead(pino_sensor);
     if(valor_sensor == HIGH){
-      Serial.println("Aberto");
       digitalWrite(pino,HIGH);
       servo_9.write(90);
       cont_tempo = 0;
-    }else 
-      if(valor_sensor == LOW){
-      Serial.println("Fechado");
       delay(100);
     }
+    delay(100);
   }
+  Serial.println("Fechado");
   digitalWrite(pino,LOW);
 }
 
@@ -41,7 +39,6 @@ void loop(){
       Serial.println("Aberto");
       digitalWrite(pino,HIGH);
       servo_9.write(90);
-      delay(100);
       tratar_fechar_cancela();
     }
   
@@ -49,6 +46,7 @@ void loop(){
       Serial.println("Fechado");
       digitalWrite(pino,LOW);
       servo_9.write(0);
-      delay(100);
     }
+
+    delay(1000);
 }
