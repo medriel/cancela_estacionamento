@@ -1,7 +1,7 @@
 #include <Servo.h>
 
 Servo servo_9;
-const int pino_sensor(4); //13
+const int pino_sensor(5); //13
 const int pino(2); //12
 int valor_sensor;
 
